@@ -1,0 +1,4 @@
+2
+H1:r1(Ccz), w1(Ccz), r1(Cr), w1(Cr), c1
+H2:r2(o1), r2(o2), a1
+Htarget: r1(Ccz), r2(o1), w1(Ccz), r2(o2), r1(Cr), w1(Cr), c1, a1

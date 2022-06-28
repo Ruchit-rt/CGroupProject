@@ -1,0 +1,99 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[toc,page]{appendix}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\begin{document}
+\begin{titlepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+\setlength{\topmargin}{0in}
+\center % Center everything on the page
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\hspace*{-0.5cm}
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.5\textwidth}
+\begin{flushright} \large
+\hspace*{2cm}
+% \includegraphics[scale=0.4]{company.png}\\
+\end{flushright}
+\end{minipage}\\[1cm]
+
+
+\textsc{\LARGE Imperial College of Science, Technology and Medicine}\\[1.5cm] 
+\textsc{\Large Department of Computing}\\[0.5cm] 
+
+\HRule \\[0.4cm]
+{ \huge \bfseries ARM 11 Interim Checkpoint Report}\\[0.4cm]
+\HRule \\[1cm]
+ 
+
+
+\textsc{{\large
+\textbf{Group 13} \\
+Rishav \textsc{Chatterjee}, \\
+Kanav \textsc{Jain}, \\ 
+Ankit \textsc{Sreevathsa}, \\
+Ruchit \textsc{Tandon} }}\\[0.5cm]
+
+
+{\large June 7, 2022}\\[0.5cm] 
+
+\vfill 
+\end{titlepage}
+
+\newpage
+
+\section{Allocation of work within the group}
+At the beginning of this project, the group was split into 2 subgroups to tackle certain components of the emulator program:\\ \\
+Rishav Chatterjee and Ankit Sreevathsa co-worked on creating the decoder and the functions to execute single data transfer and data processing instructions.
+\\\\
+Meanwhile, Ruchit Tandon and Kanav Jain co-worked on the emulate.c file which contained the fetch component of the program as well as the pipeline needed for the emulator. Furthermore, they both worked on writing the functions to execute multiply and branch instructions. 
+\\\\
+As a group we checked each other's work to make sure we were happy with the functionality of all the components. As well as this, once all components were done, we integrated them at the end and tested and debugged together to make sure the test cases passed. 
+
+
+\section{Opinions about Group Working}
+\textbf{Rishav:}\\
+I did not really have much experience in collaborating with a group in a big project and it did not take me long to realize the upsides of it. Some of the upsides were, working as a group to understand concepts in a new language, and helping other teammates wherever they weren't confident about their understanding of an aspect of the project. Within a week of working together, we developed really good chemistry and that translated directly into results when it came to breaking up tasks and collaborating on executing them as pairs. The first challenge that presented itself was version control, however in no time we figured that out as well, and with the momentum we have gathered, the goal is to carry that momentum to the checkered flag and build the assembler in the weeks to come.
+\\\\
+\textbf{Kanav:}\\
+Working together with everyone taught me many things. One of which is co-ordination, making compromises and making a timetable that worked with everyone. Initially, we started working on it without much knowledge on C, but with our knowledge from the tutorial videos and us trying to figure out what we need to make the emulator work, we made progress. Working on the emulate.c file, I learnt memory allocation and really understood the concept of storing on the heap, which I didn’t understand from watching the tutorial videos. Also, throughout the process I learned in depth how computers process instructions. The project helped me gain experience and insight into programming with C, while being a new language for me, I enjoyed coding with it and it taught me how to work with a team of coders.
+\\\\
+\textbf{Ankit:}\\
+I believe that our group worked very well when building the emulator. One of the main things our group did well was to have open discussions about the work, this allowed for everyone to voice their ideas and the suggestions could be used to solve problems we encountered. Furthermore, we communicated well in terms of delegating work and coming together whenever one of the pairs had a problem. On top of this, coordination on meetings and completing work within our own deadlines has been very good. Now the aim is to carry this way of work when building the assembler and extension. 
+\\\\
+\textbf{Ruchit:}\\
+Working in a group project always has its ups and downs. While it can be difficult as the group leader to get everything organised and ready for the deadline, it is equally rewarding when all pieces fit together and the team functions as one. Working through this project has taught me loads in team work, patience, determination and of course in the language C! I also got to know my teammates at a deeper more human level. When we started working on the emulator we had no idea how to go about it. However, seeing the success that the team has had I am confident that we can reuse similar ideas and skills to complete assembler.
+
+\section{Details About Emulator}
+After reading the specification, as a group we decided to break the program into 3 main components: fetching and processing the binary file, decoding and storing the information from each 32 bit instruction and executing the instruction and updating the state of the emulator. We knew that we could have separate files to decode and execute the instructions and let the emulate.c file handle outputting the state and fetching the instructions. Within these files as there were different instruction types we knew that we could switch on the type 
+of instruction to call functions to process a specific type of instruction. Below, is an explanation of the main files that were created for the emulator:
+\\\\
+\textbf{emulate.c:} The main file has functions to read the binary file, process the 32 bit words from the file as well as print the state of the emulator and terminate when a halt instruction is given. Within the file a while loop is used to simulate the pipeline using function calls to decode.c and execute.c. Finally, the file uses a $state\_of\_sys$ struct to store information of the emulator's state.
+\\\\
+\textbf{decode.c:} contains a function (called \textit{decode}) that checks the type of function  and calls instruction specific functions to populate the instruction struct with the information to execute that instruction, e.g. for the branch  instruction the function \textit{branch} is called to store the offset to be used when executing the instruction.   
+\\\\
+\textbf{execute.c} contains a main function $execute$ which is used to call one of these 4 functions depending on the type of instruction: $execute\_branch$, $execute\_multiply$, $execute\_dp$, and $execute\_sdt$. Within execute.c, there is a $condition$ to check if the condition flags are valid and there are helper functions such as $is\_neg$, $negate$, $offset\_in\_long$ and $shifter$ which were used to help execute data processing, branch and multiply instructions. 
+\\\\
+\textbf{defns.h:} contains all the definitions of constant number and type aliases used in our emulator program.
+\\\\
+\textbf{instruction.h:} contains all the struct types and enums we used in the project, for example, enums for shift operations, instruction type, opcode etc. Also contained in instruction.h is the struct to define the instruction containing fields to store the registers Rn,Rd,Rs,Rm along with the instruction opcode, operands and offsets and the type of the instruction is stored as well.  
+\\\\
+\textbf{state\_of\_sys.h:} contains the struct type for modelling the state of the ARM machine in the emulator program, which uses arrays for the memory and registers. 
+
+\section{Usefull Skills for the Assembeler}
+The group's understanding of decoding binary instructions can be used to better understand how the assembler will encode the assembly instructions. The constants, structs and enums defined for the emulator can be reused in the assembler. There are certain functions that can be adjusted to be used in assembler, e.g. in \textbf{decode.c} the functions to decode instructions such as multiply, branch and other instructions can be reverse engineered to encode those instructions by using similar bit shifting operations.
+
+\section{Challenging tasks and resolutions}
+One of the main difficulties is coordinating work and making sure that when we code together that merge conflicts don't appear and cause us to waste time resolving them. One of the ways to resolve this is to make sure that people are working on separate files; another way is to use branches for certain features of the programs and merge the branches once those features are completed. 
+\\\\
+Another difficulty is going to be the small amount of time we have to complete this project, and therefore we have to implement extensions that are doable before the deadline. Thus, we are going to meet as a group on a regular basis to help speed up the process of making the extension.
+
+\end{document}
